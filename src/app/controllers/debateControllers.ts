@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 import { AuthRequest } from "../middleware/auth";
 import Debate from "../models/Debate";
 import User from "../models/User";
@@ -42,7 +43,7 @@ export const joinDebate = async (req: AuthRequest, res: Response) => {
       .json({ message: "Already joined, cannot switch sides" });
 
   debate.participants.push({
-    user: req.user!._id,
+    user: new Types.ObjectId(req.user!._id),
     side,
     joinedAt: new Date(),
   });

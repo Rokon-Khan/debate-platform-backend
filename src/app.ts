@@ -1,4 +1,9 @@
 import express from "express";
+import argumentRoutes from "./app/routes/argument";
+import authRoutes from "./app/routes/auth";
+import debateRoutes from "./app/routes/debate";
+import scoreboardRoutes from "./app/routes/scoreboard";
+import voteRoutes from "./app/routes/vote";
 const cors = require("cors");
 
 const app = express();
@@ -11,7 +16,13 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions)); // Use CORS with the specified options
+app.use(cors(corsOptions));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/debates", debateRoutes);
+app.use("/api/arguments", argumentRoutes);
+app.use("/api/votes", voteRoutes);
+app.use("/api/scoreboard", scoreboardRoutes);
 
 // Error handler fallback
 app.use(

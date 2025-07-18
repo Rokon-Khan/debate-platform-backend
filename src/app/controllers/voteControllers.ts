@@ -17,10 +17,12 @@ export const voteArgument = async (req: AuthRequest, res: Response) => {
   if (arg.author.toString() === req.user!._id.toString())
     return res.status(400).json({ message: "Cannot vote for own argument" });
 
-  if (arg.votes.includes(req.user!._id))
+  if (
+    arg.votes.some((vote: any) => vote.toString() === req.user!._id.toString())
+  )
     return res.status(400).json({ message: "Already voted" });
 
-  arg.votes.push(req.user!._id);
+  arg.votes.push(new (require("mongoose").Types.ObjectId)(req.user!._id));
   await arg.save();
 
   await User.findByIdAndUpdate(arg.author, { $inc: { totalVotes: 1 } });
