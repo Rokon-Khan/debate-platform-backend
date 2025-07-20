@@ -35,3 +35,34 @@ export const login = async (req: Request, res: Response) => {
     user: { id: user._id, username: user.username, email: user.email },
   });
 };
+
+export const googleAuth = async (req: Request, res: Response) => {
+  const { email, username, password } = req.body;
+
+  if (!email || !username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Missing email, username, or password" });
+  }
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    // Only create user if this email does not exist
+    user = new User({
+      username,
+      email,
+      password, // Will be a random password, never shown to user
+    });
+    await user.save();
+  }
+  // Issue JWT if desired, or just return user
+  res.status(200).json({
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+
+    // token,
+  });
+};
